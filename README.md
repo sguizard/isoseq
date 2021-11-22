@@ -33,13 +33,13 @@ On release, automated continuous integration tests run the pipeline on a full-si
 3. Select reads with a polyA tail and removed it from sequence ([`ISOSEQ3 REFINE`](https://github.com/PacificBiosciences/IsoSeq))
 4. Pool consensi per sample ([`PBMERGE`](https://github.com/pacificbiosciences/pbbam/))
 5. Polish the consensi by clustering ([`ISOSEQ3 CLUSTER`](https://github.com/PacificBiosciences/IsoSeq))
-6. Extract consensi FASTQ ([`SAMTOOLS FASTQ`](http://www.htslib.org/doc/samtools-fasta.html))
-7. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2))
-8. Convert bam output into sam ([`SAMTOOLS SORT | SAMTOOLS VIEW`](http://www.htslib.org/doc/samtools-sort.html))
-9. Split mapping per chromosomes ([`BAMTOOLS SPLIT`](https://github.com/pezmaster31/bamtools))
-10. Clean gene models ([`TAMA collapse`](https://github.com/GenomeRIK/tama))
-11. Merge annotations by sample ([`TAMA merge`](https://github.com/GenomeRIK/tama))
-
+6. Pool consensi and unclustered sequences (singletons) ([`PBMERGE`](https://github.com/pacificbiosciences/pbbam/))
+7. Extract consensi FASTQ ([`SAMTOOLS FASTQ`](http://www.htslib.org/doc/samtools-fasta.html))
+8. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2))
+9. Sort sam file and convert bam ([`SAMTOOLS SORT`](http://www.htslib.org/doc/samtools-sort.html))
+10. Split mapping per chromosomes ([`BAMTOOLS SPLIT`](https://github.com/pezmaster31/bamtools))
+11. Clean gene models ([`TAMA collapse`](https://github.com/GenomeRIK/tama))
+12. Merge annotations by sample ([`TAMA merge`](https://github.com/GenomeRIK/tama))
 
 ## Quick Start
 
@@ -74,6 +74,7 @@ The nf-core/isoseq pipeline comes with documentation about the pipeline [usage](
 nf-core/isoseq was originally written by [Sébastien Guizard](https://github.com/sguizard).
 
 We thank the following people for their extensive assistance in the development of this pipeline:
+
 * Richard Kuo for his valuable advice on isoseq analysis
 * The Workpackage 2 of Gene-Switch Project for their fruitful discussions and remarks
 * The Mick Watson group for their support
