@@ -1,3 +1,0 @@
-[submodule "nf-core_modules"]
-	path = nf-core_modules
-	url = https://github.com/sguizard/modules
