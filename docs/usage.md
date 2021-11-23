@@ -10,12 +10,12 @@ This pipeline has been designed to analyse several samples or sequencing runs in
 
 ### Input storage tip
 
-To keep the project directory clean all input file (BAM + PBI + PRIMERS + GENOME) can stored in a unique folder (eg. data). The pipeline use a regular expression to detect and list the bam files to process.
+To keep the project directory clean, all input file (BAM + PBI + PRIMERS + GENOME) can be stored in a unique folder (eg. data). The pipeline use a regular expression to detect and list the bam files to process.
 
 ### Input files
 
-The pipeline expect to find the *subreads.bam accompanied by their index files (*pbi ). The index should be provided with reads. If not, it could be generated using [PBINDEX](https://pbbam.readthedocs.io/en/latest/tools/pbindex.html).
-The primers and genome reference file have to in fasta format. Here an example of primers fasta:
+The pipeline expect to find the *subreads.bam accompanied by their index files (*pbi). The index should be provided with raw reads. If not, it could be generated using [PBINDEX](https://pbbam.readthedocs.io/en/latest/tools/pbindex.html).
+The primers and genome reference file have to be in fasta format. Here an example of primers fasta:
 
 ```console
 >5p
