@@ -35,7 +35,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 5. Polish the consensi by clustering ([`ISOSEQ3 CLUSTER`](https://github.com/PacificBiosciences/IsoSeq))
 6. Pool consensi and unclustered sequences (singletons) ([`PBMERGE`](https://github.com/pacificbiosciences/pbbam/))
 7. Extract consensi FASTQ ([`SAMTOOLS FASTQ`](http://www.htslib.org/doc/samtools-fasta.html))
-8. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2))
+8. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2) or [`uLTRA`]())
 9. Sort sam file and convert bam ([`SAMTOOLS SORT`](http://www.htslib.org/doc/samtools-sort.html))
 10. Split mapping per chromosomes ([`BAMTOOLS SPLIT`](https://github.com/pezmaster31/bamtools))
 11. Clean gene models ([`TAMA collapse`](https://github.com/GenomeRIK/tama))
@@ -78,6 +78,9 @@ We thank the following people for their extensive assistance in the development 
 * Richard Kuo for his valuable advice on isoseq analysis
 * The Workpackage 2 of Gene-Switch Project for their fruitful discussions and remarks
 * The Mick Watson group for their support
+* The nf-core community for their help in the developpement of this pipeline
+
+This pipeline has been developed as part of the GENE-SWitCH project. This project has received funding from the European Union's Horizon 2020 Research and Innovation Programme under the grant agreement n° 817998.
 
 ## Contributions and Support
 
