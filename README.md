@@ -43,7 +43,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 5. Polish the consensi by clustering ([`ISOSEQ3 CLUSTER`](https://github.com/PacificBiosciences/IsoSeq))
 6. Pool consensi and unclustered sequences (singletons) ([`PBMERGE`](https://github.com/pacificbiosciences/pbbam/))
 7. Extract consensi FASTQ ([`SAMTOOLS FASTQ`](http://www.htslib.org/doc/samtools-fasta.html))
-8. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2) or [`uLTRA`]())
+8. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2) or [`uLTRA`](https://github.com/ksahlin/ultra))
 9. Sort sam file and convert bam ([`SAMTOOLS SORT`](http://www.htslib.org/doc/samtools-sort.html))
 10. Split mapping per chromosomes ([`BAMTOOLS SPLIT`](https://github.com/pezmaster31/bamtools))
 11. Clean gene models ([`TAMA collapse`](https://github.com/GenomeRIK/tama))
