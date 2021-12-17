@@ -179,7 +179,7 @@ workflow ISOSEQ {
     PBBAM_PBMERGE_1(ch_grouped_bams) // Merged BAM files into one  file
 
     // The user have the choice to run or not the cluster step
-    if (params.run_cluster == true) {            // Run cluster step
+    if (params.run_cluster == true && params.singletons == true) { // Run cluster step
         ISOSEQ3_CLUSTER(PBBAM_PBMERGE_1.out.bam) // Cluster CCS, output consensus of CCS ("transcripts") and not clustered CCS ("singletons")
         ISOSEQ3_CLUSTER.out.bam                  // Concat bam and singletons bam channels together and group bams using id
             .concat(ISOSEQ3_CLUSTER.out.singletons_bam)
@@ -192,7 +192,14 @@ workflow ISOSEQ {
             .map { [ [ id:it[0].id, single_end:true ], it[1] ] }
             .set { ch_cluster_updated }
     }
-    else { // do not run cluster step
+    else if (params.run_cluster == true && params.singletons == false) {
+        ISOSEQ3_CLUSTER(PBBAM_PBMERGE_1.out.bam)
+
+        ISOSEQ3_CLUSTER.out.bam // Add single_end option to meta
+            .map { [ [ id:it[0].id, single_end:true ], it[1] ] }
+            .set { ch_cluster_updated }
+    }
+    else if (params.run_cluster == false && params.singletons == false) { // do not run cluster step
         PBBAM_PBMERGE_1.out.bam  // Add single_end option to meta
             .map { [ [ id:it[0].id, single_end:true ], it[1] ] }
             .set { ch_cluster_updated }
@@ -243,13 +250,19 @@ workflow ISOSEQ {
     ch_versions = ch_versions.mix(LIMA.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(ISOSEQ3_REFINE.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(PBBAM_PBMERGE_1.out.versions.first().ifEmpty(null))
-    ch_versions = ch_versions.mix(PBBAM_PBMERGE_2.out.versions.first().ifEmpty(null))
-    ch_versions = ch_versions.mix(ISOSEQ3_CLUSTER.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(SAMTOOLS_FASTQ.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(BAMTOOLS_SPLIT.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(GSTAMA_COLLAPSE.out.versions.first().ifEmpty(null))
     ch_versions = ch_versions.mix(GSTAMA_MERGE.out.versions.first().ifEmpty(null))
+
+    if (params.run_cluster == true) {
+        ch_versions = ch_versions.mix(ISOSEQ3_CLUSTER.out.versions.first().ifEmpty(null))
+    }
+
+    if (params.singletons == true) {
+        ch_versions = ch_versions.mix(PBBAM_PBMERGE_2.out.versions.first().ifEmpty(null))
+    }
 
     if (params.ultra == true) {
         ch_versions = ch_versions.mix(ULTRA_PIPELINE.out.versions.first().ifEmpty(null))

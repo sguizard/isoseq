@@ -97,6 +97,12 @@
                     "description": "Run isoseq3 cluster step",
                     "help_text": "Even if for Hifi reads cluster step is optional, you can add this program to the pipeline process. \n```bash\n--run_cluster\n```"
                 },
+                "singletons": {
+                    "type": "boolean",
+                    "description": "Map singletons with Hifi",
+                    "fa_icon": "fas fa-dna",
+                    "help_text": "By default, the pipeline align Hifi reads only. \nYou can add the unclustered CCS to the mapping by using this option.\n"
+                },
                 "capped": {
                     "type": "boolean",
                     "fa_icon": "fas fa-graduation-cap",
