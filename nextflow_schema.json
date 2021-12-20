@@ -78,31 +78,6 @@
                     "default": 0.9,
                     "help_text": "Minimum read quaiity for a consensus. \nUnder this threshold the sequence is discarded. \nThis value must be in range [0-1]. \n```bash\n--rq 0.9\n```"
                 },
-                "require_polya": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-cog",
-                    "description": "Isoseq3 refine:  polyA requirement",
-                    "help_text": "Require FL reads to have a poly(A) tail and remove it.\n```bash\n--require_polya\n```"
-                },
-                "min_polya_length": {
-                    "type": "integer",
-                    "fa_icon": "fas fa-cog",
-                    "description": "Isoseq3 refine: :Min polyA length",
-                    "help_text": "Minimum poly(A) tail length.\n```bash\n--min_polya_length 15\n```",
-                    "default": 15
-                },
-                "run_cluster": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-object-group",
-                    "description": "Run isoseq3 cluster step",
-                    "help_text": "Even if for Hifi reads cluster step is optional, you can add this program to the pipeline process. \n```bash\n--run_cluster\n```"
-                },
-                "singletons": {
-                    "type": "boolean",
-                    "description": "Map singletons with Hifi",
-                    "fa_icon": "fas fa-dna",
-                    "help_text": "By default, the pipeline align Hifi reads only. \nYou can add the unclustered CCS to the mapping by using this option.\n"
-                },
                 "capped": {
                     "type": "boolean",
                     "fa_icon": "fas fa-graduation-cap",
