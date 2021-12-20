@@ -76,7 +76,7 @@
                     "fa_icon": "fas fa-cog",
                     "description": "pbccs: Minimum read quality",
                     "default": 0.9,
-                    "help_text": "Minimum read quaiity for a consensus. \nUnder this threshold the sequence is dicarded. \nThis value must be in range [0-1]. \n```bash\n--rq 0.9\n```"
+                    "help_text": "Minimum read quaiity for a consensus. \nUnder this threshold the sequence is discarded. \nThis value must be in range [0-1]. \n```bash\n--rq 0.9\n```"
                 },
                 "require_polya": {
                     "type": "boolean",
