@@ -56,8 +56,8 @@
                 }
             }
         },
-        "steps_options": {
-            "title": "Steps options",
+        "ccs_options": {
+            "title": "ccs options",
             "type": "object",
             "description": "Set options for each program",
             "default": "",
@@ -65,17 +65,61 @@
                 "chunk": {
                     "type": "integer",
                     "default": 40,
-                    "description": "pbccs: Split pbccs workload",
-                    "help_text": "CCS workload can be splited into to chunks for a faster running time. \nThis value must be a positive integer greater than 1. \n```bash\n--chunk 1/10 \n```",
+                    "description": "ccs --chunk option",
+                    "help_text": "CCS workload can be split into to chunks for a faster running time. \nThis value must be a positive integer greater than 1. \n```bash\n--chunk 1/10 \n```",
                     "fa_icon": "fas fa-cog"
                 },
                 "rq": {
                     "type": "number",
                     "default": 0.9,
-                    "description": "pbccs: Minimum read quality",
+                    "description": "ccs --rq option",
                     "help_text": "Minimum read quaiity for a consensus. \nUnder this threshold the sequence is discarded. \nThis value must be in range [0-1]. \n```bash\n--rq 0.9\n```",
                     "fa_icon": "fas fa-cog"
                 },
+                "min_passes": {
+                    "type": "integer",
+                    "default": 3,
+                    "description": "ccs --min-passes option",
+                    "help_text": "Minimum number of full-length subreads required to generate CCS for a ZMW.",
+                    "fa_icon": "fas fa-cog"
+                },
+                "min_snr": {
+                    "type": "number",
+                    "default": 2.5,
+                    "description": "ccs --min-snr option",
+                    "help_text": "Minimum SNR of subreads to use for generating CCS",
+                    "fa_icon": "fas fa-cog"
+                },
+                "min_length": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "ccs --min-length option",
+                    "help_text": "Minimum draft length before polishing",
+                    "fa_icon": "fas fa-cog"
+                },
+                "max_length": {
+                    "type": "integer",
+                    "default": 50000,
+                    "description": "ccs --max-length option",
+                    "help_text": "Maximum draft length before polishing",
+                    "fa_icon": "fas fa-cog"
+                },
+                "top_passes": {
+                    "type": "integer",
+                    "default": 60,
+                    "description": "ccs --top-passes option",
+                    "help_text": "Pick at maximum the top N passes for each ZMW",
+                    "fa_icon": "fas fa-cog"
+                }
+            },
+            "fa_icon": "fas fa-cogs"
+        },
+        "tama_options": {
+            "title": "TAMA options",
+            "type": "object",
+            "description": "TAMA collapse and TAMA merge options",
+            "default": "",
+            "properties": {
                 "capped": {
                     "type": "boolean",
                     "description": "TAMA collapse: Capped RNA?",
@@ -102,15 +146,24 @@
                     "description": "TAMA collapse: 3 prime threshold",
                     "help_text": "Set the maximum threshold for collapsing 3 prime exon.\n```\n--three_prime 100\n```",
                     "fa_icon": "fas fa-cog"
-                },
+                }
+            },
+            "fa_icon": "fas fa-cogs"
+        },
+        "ultra_options": {
+            "title": "uLTRA options",
+            "type": "object",
+            "description": "uLTRA options",
+            "default": "",
+            "fa_icon": "fas fa-cogs",
+            "properties": {
                 "ultra": {
                     "type": "boolean",
                     "description": "Use uLTRA instead of minimap2",
                     "help_text": "uLTRA improves detection of smalls exons. ",
                     "fa_icon": "fas fa-stream"
                 }
-            },
-            "fa_icon": "fas fa-cogs"
+            }
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -315,7 +368,13 @@
             "$ref": "#/definitions/input_output_options"
         },
         {
-            "$ref": "#/definitions/steps_options"
+            "$ref": "#/definitions/ccs_options"
+        },
+        {
+            "$ref": "#/definitions/tama_options"
+        },
+        {
+            "$ref": "#/definitions/ultra_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
