@@ -3,47 +3,32 @@
     "homePage": "https://github.com/nf-core/isoseq",
     "repos": {
         "nf-core/modules": {
-            "bamtools/split": {
-                "git_sha": "0a5ddd0ad0f3035253fab569caa631fa0a81db9b"
-            },
             "gstama/collapse": {
-                "git_sha": "001d5071c2b635f1514096d1087904c79cc9e9b5"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "gstama/merge": {
-                "git_sha": "d3369789dafca9aaa7e2535727705872c13385ca"
-            },
-            "gunzip": {
-                "git_sha": "d30bf235b1524327703591c9ce2f372bfb2d474f"
-            },
-            "isoseq3/cluster": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "isoseq3/refine": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "lima": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "minimap2/align": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "multiqc": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
-            },
-            "pbbam/pbmerge": {
-                "git_sha": "3aacd46da2b221ed47aaa05c413a828538d2c2ae"
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "pbccs": {
-                "git_sha": "ec15d0f9fdee90e6b751a402cb5150306a2c4307"
-            },
-            "samtools/fastq": {
-                "git_sha": "19035c99d1cd8412b5046c6bb4af787658b84e5b"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "samtools/sort": {
-                "git_sha": "19035c99d1cd8412b5046c6bb4af787658b84e5b"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "ultra/pipeline": {
-                "git_sha": "c25c3fe4669096da8bd4bf3143cfc139d126035d"
+                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             }
         }
     }

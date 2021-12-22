@@ -1,7 +1,7 @@
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -11,74 +11,64 @@ WorkflowIsoseq.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.fasta, params.primers, params.multiqc_config ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.fasta, params.primers ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
+// Check mandatory parameters
+// if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
-
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
+//
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+//
+//include { INPUT_CHECK } from '../subworkflows/local/input_check'
 
 //
 // MODULE: Local to the pipeline
 //
-include { PERL_BIOPERL }        from '../modules/local/perl/bioperl/main'        addParams( options: modules['PERL_BIOPERL']        )
-include { GSTAMA_FILELIST }     from '../modules/local/gstama/filelist/main'     addParams( options: modules['GSTAMA_FILELIST']     )
-include { BAMTOOLS_CONVERT }    from '../modules/local/bamtools/convert/main'    addParams( options: modules['BAMTOOLS_CONVERT']    )
-include { GSTAMA_POLYACLEANUP } from '../modules/local/gstama/polyacleanup/main' addParams( options: modules['GSTAMA_POLYACLEANUP'] )
+include { PERL_BIOPERL }        from '../modules/local/perl/bioperl/main'
+include { GSTAMA_FILELIST }     from '../modules/local/gstama/filelist/main'
+include { BAMTOOLS_CONVERT }    from '../modules/local/bamtools/convert/main'
+include { GSTAMA_POLYACLEANUP } from '../modules/local/gstama/polyacleanup/main'
 
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-def multiqc_options   = modules['multiqc']
-multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
 
 //
 // MODULE: Installed directly from nf-core/modules
 //
-refine_params = ""
-if (params.require_polya == true) { refine_params = "--require-polya --min-polya-length $params.min_polya_length" }
-
-tama_collpase_params = ""
-if      (params.capped == true)  { tama_collpase_params = "-x capped -b BAM -a ${params.five_prime} -m ${params.splice_junction} -z ${params.three_prime}" }
-else if (params.capped == false) { tama_collpase_params = "-x no_cap -b BAM -a ${params.five_prime} -m ${params.splice_junction} -z ${params.three_prime}" }
-
-pbccs_params      = " --min-rq ${params.rq}"
-tama_merge_params = "-a ${params.five_prime} -m ${params.splice_junction} -z ${params.three_prime}"
-
-include { PBCCS }           from '../modules/nf-core/modules/pbccs/main'           addParams( options: [ args:"${pbccs_params}", publish_dir:"01_PBCCS" ]                                    )
-include { LIMA }            from '../modules/nf-core/modules/lima/main'            addParams( options: modules['LIMA']                                                                       )
-include { ISOSEQ3_REFINE }  from '../modules/nf-core/modules/isoseq3/refine/main'  addParams( options: [ args:"${refine_params}", publish_dir:"03_ISOSEQ3_REFINE" ]                          )
-include { MINIMAP2_ALIGN }  from '../modules/nf-core/modules/minimap2/align/main'  addParams( options: modules['MINIMAP2_ALIGN']                                                             )
-include { ULTRA_PIPELINE }  from '../modules/nf-core/modules/ultra/pipeline/main'  addParams( options: modules['ULTRA']                                                                      )
-include { SAMTOOLS_SORT }   from '../modules/nf-core/modules/samtools/sort/main'   addParams( options: modules['SAMTOOLS_SORT']                                                              )
-include { GSTAMA_COLLAPSE } from '../modules/nf-core/modules/gstama/collapse/main' addParams( options: [ args:"${tama_collpase_params}", publish_dir:"09_GSTAMA_COLLAPSE", suffix: "_tama" ] )
-include { GSTAMA_MERGE }    from '../modules/nf-core/modules/gstama/merge/main'    addParams( options: [ args:"${tama_merge_params}",    publish_dir:"11_GSTAMA_MERGE" ]                     )
-include { MULTIQC }         from '../modules/nf-core/modules/multiqc/main'         addParams( options: multiqc_options                                                                       )
+include { PBCCS }           from '../modules/nf-core/modules/pbccs/main'
+include { LIMA }            from '../modules/nf-core/modules/lima/main'
+include { ISOSEQ3_REFINE }  from '../modules/nf-core/modules/isoseq3/refine/main'
+include { MINIMAP2_ALIGN }  from '../modules/nf-core/modules/minimap2/align/main'
+include { ULTRA_PIPELINE }  from '../modules/nf-core/modules/ultra/pipeline/main'
+include { SAMTOOLS_SORT }   from '../modules/nf-core/modules/samtools/sort/main'
+include { GSTAMA_COLLAPSE } from '../modules/nf-core/modules/gstama/collapse/main'
+include { GSTAMA_MERGE }    from '../modules/nf-core/modules/gstama/merge/main'
+include { MULTIQC }         from '../modules/nf-core/modules/multiqc/main'
 
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 // Info required for completion email and summary
@@ -244,11 +234,10 @@ workflow ISOSEQ {
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
 
-
 /*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     COMPLETION EMAIL AND SUMMARY
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow.onComplete {
@@ -258,29 +247,8 @@ workflow.onComplete {
     NfcoreTemplate.summary(workflow, params, log)
 }
 
-
 /*
-========================================================================================
-    UTILS
-========================================================================================
-*/
-def discard_unmapped_and_save_id(List row) {
-    def array = []
-    for ( i in row[1] ) {
-        def seq = (i =~ /.*\.(REF_.+)\.bam/)[ 0 ][ 1 ]
-        if (seq != "REF_unmapped") {
-            def id_former = row[0].id
-            def id_new    = row[0].id + "." + seq
-            array <<  [ [id:id_new, id_former:id_former], i ]
-        }
-        else { } //println("FOUND UNMAPPED: " + i)
-    }
-    return array
-}
-
-
-/*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
