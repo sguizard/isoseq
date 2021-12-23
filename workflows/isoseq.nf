@@ -89,7 +89,6 @@ workflow ISOSEQ {
         .fromPath(params.input + '/*.bam.pbi')
         .ifEmpty { exit 1, "Cannot find any pbi(s) in input directory: ${params.input}\nNB: File names must finish by '.bam.pbi'\nNB: Path needs to be enclosed in quotes!" }
 
-
         Channel // Prepare channel for bams: duplicates item by num of chunk and extract id
         .fromPath(params.input + '/*.bam')
         .flatMap {  // Duplicate each samples to match to the number of chunks
@@ -107,15 +106,11 @@ workflow ISOSEQ {
         .set { ch_pbccs_in }
     } else { exit 1, 'OPTION ERROR: bam/bam.pbi directory not provided or cannot be found!' }
 
+    n_samples = new File(params.input).listFiles().count { it.name ==~ /.*.bam$/ }
 
     Channel // Prepare the pbccs chunk_num channel
-        .from((1..params.chunk).step(1).toList())
+        .from((1..params.chunk).step(1).toList()*n_samples)
         .set { ch_chunk_num }
-
-
-    Channel // Prepare the pbccs chunk_num value channel
-        .value(params.chunk)
-        .set { ch_chunk_on }
 
 
     if (params.primers) {
