@@ -16,10 +16,6 @@
 
 * [ISOSEQ3 REFINE](https://github.com/PacificBiosciences/IsoSeq)
 
-* [PBMERGE](https://pbbam.readthedocs.io/en/latest/index.html)
-
-* [ISOSEQ3 CLUSTER](https://github.com/PacificBiosciences/IsoSeq)
-
 * [SAMTOOLS](https://academic.oup.com/gigascience/article/10/2/giab008/6137722)
     > Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li Twelve years of SAMtools and BCFtools GigaScience, Volume 10, Issue 2, February 2021, giab008
 

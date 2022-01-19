@@ -1,22 +1,11 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName; getProcessName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process GSTAMA_FILELIST {
     tag "$meta.id"
-    label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
+    label 'process_medium'
 
     conda (params.enable_conda ? "conda-forge::sed=4.7" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img"
-    } else {
-        container "biocontainers/biocontainers:v1.2.0_cv1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img' :
+        'biocontainers/biocontainers:v1.2.0_cv1' }"
 
     input:
     tuple val(meta), path(bed)
@@ -28,7 +17,8 @@ process GSTAMA_FILELIST {
     path "versions.yml"           , emit: versions
 
     script:
-    def prefix = options.suffix ? "${meta.id}${options.suffix}" : "${meta.id}"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     for i in *.bed
     do
@@ -36,8 +26,8 @@ process GSTAMA_FILELIST {
     done
 
     cat <<-END_VERSIONS > versions.yml
-    ${getProcessName(task.process)}:
-        ${getSoftwareName(task.process)}: \$( tama_merge.py -version | head -n1 )
+    "${task.process}":
+        gstama: \$( tama_merge.py -version | head -n1 )
     END_VERSIONS
     """
 }
