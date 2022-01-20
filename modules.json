@@ -13,7 +13,7 @@
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "lima": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "c0e1489133ee9f3c1b1eebccb5344b681b8c1c3f"
             },
             "minimap2/align": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
@@ -25,7 +25,7 @@
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
             },
             "samtools/sort": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e751e5040af57e1b4e06ed4e0f3efe6de25c1683"
             },
             "ultra/pipeline": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
