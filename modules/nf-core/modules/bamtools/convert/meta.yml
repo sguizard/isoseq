@@ -1,11 +1,17 @@
-name: bamtools_split
+name: bamtools_convert
 description: BamTools provides both a programmer's API and an end-user's toolkit for handling BAM files.
 keywords:
   - bamtools
   - bamtools/convert
   - bam
   - convert
-  - chunk
+  - bed
+  - fasta
+  - fastq
+  - json
+  - pileup
+  - sam
+  - yaml
 tools:
   - bamtools:
       description: C++ API & command-line toolkit for working with BAM data
@@ -23,7 +29,7 @@ input:
         e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
-      description: A BAM file to convert
+      description: BAM file
       pattern: "*.bam"
 
 output:
@@ -36,10 +42,11 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - bam:
+  ## TODO nf-core: Delete / customise this example output
+  - out:
       type: file
-      description: Several Bam files
-      pattern: "*.bam"
+      description: The data in the asked format (bed, fasta, fastq, json, pileup, sam, yaml)
+      pattern: "*.{bed,fasta,fastq,json,pileup,sam,yaml}"
 
 authors:
   - "@sguizard"
