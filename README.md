@@ -40,8 +40,8 @@ On release, automated continuous integration tests run the pipeline on a full-si
 5. Remove remaining polyA tails from reads ([`GSTAMA_POLYACLEANUP`](https://github.com/GenomeRIK/tama))
 6. Map consensi on reference genome ([`MINIMAP2`](https://github.com/lh3/minimap2) or [`uLTRA`](https://github.com/ksahlin/ultra))
 7. Sort sam file and convert bam ([`SAMTOOLS SORT`](http://www.htslib.org/doc/samtools-sort.html))
-9. Clean gene models ([`TAMA collapse`](https://github.com/GenomeRIK/tama))
-10. Merge annotations by sample ([`TAMA merge`](https://github.com/GenomeRIK/tama))
+8. Clean gene models ([`TAMA collapse`](https://github.com/GenomeRIK/tama))
+9. Merge annotations by sample ([`TAMA merge`](https://github.com/GenomeRIK/tama))
 
 ## Quick Start
 
