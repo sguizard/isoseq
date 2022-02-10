@@ -54,6 +54,9 @@ include { GSTAMA_POLYACLEANUP } from '../modules/local/gstama/polyacleanup/main'
 //
 // MODULE: Installed directly from nf-core/modules
 //
+//include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+//include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+//include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { PBCCS }            from '../modules/nf-core/modules/pbccs/main'
 include { LIMA }             from '../modules/nf-core/modules/lima/main'
 include { ISOSEQ3_REFINE }   from '../modules/nf-core/modules/isoseq3/refine/main'
@@ -207,6 +210,25 @@ workflow ISOSEQ {
         .flatten()
         .collect()
         .set { ch_versions }
+//  //
+//  // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+//  //
+//  INPUT_CHECK (
+//      ch_input
+//  )
+//  ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+//
+//  //
+//  // MODULE: Run FastQC
+//  //
+//  FASTQC (
+//      INPUT_CHECK.out.reads
+//  )
+//  ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+//
+//  CUSTOM_DUMPSOFTWAREVERSIONS (
+//      ch_versions.unique().collectFile(name: 'collated_versions.yml')
+//  )
 
     //
     // MODULE: MultiQC
@@ -218,9 +240,11 @@ workflow ISOSEQ {
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-//     ch_multiqc_files = ch_multiqc_files.mix(PBCCS.out.report_json.collect{it[1]}.ifEmpty([]))
+//  ch_multiqc_files = ch_multiqc_files.mix(PBCCS.out.report_json.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(LIMA.out.summary.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(LIMA.out.counts.collect{it[1]}.ifEmpty([]))
+//  ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+//  ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect()
