@@ -154,7 +154,7 @@ workflow ISOSEQ {
     LIMA(ch_pbccs_bam_updated, ch_primers)   // Remove primers from CCS
     ISOSEQ3_REFINE(LIMA.out.bam, ch_primers) // Discard CCS without polyA tails, remove it from the other
     BAMTOOLS_CONVERT(ISOSEQ3_REFINE.out.bam)
-    GSTAMA_POLYACLEANUP(BAMTOOLS_CONVERT.out.out)
+    GSTAMA_POLYACLEANUP(BAMTOOLS_CONVERT.out.data)
 
     // Align CCS (no cluster path) or singletons + transcripts (cluster path)
     // User can choose between minimap2 and uLTRA aligners
