@@ -164,7 +164,7 @@ workflow ISOSEQ {
         PERL_BIOPERL(ULTRA_PIPELINE.out.sam) // Remove remove reads ending with GAP (N) in CIGAR string
     }
     else {
-        MINIMAP2_ALIGN(GSTAMA_POLYACLEANUP.out.out, ch_fasta) // Align read against genome
+        MINIMAP2_ALIGN(GSTAMA_POLYACLEANUP.out.fasta, ch_fasta) // Align read against genome
         PERL_BIOPERL(MINIMAP2_ALIGN.out.paf)               // Remove remove reads ending with GAP (N) in CIGAR string
     }
 
