@@ -131,8 +131,8 @@ workflow ISOSEQ {
         Channel // --> Prepare gtf value channel for ultra
             .value(file(params.gtf))
             .set { ch_gtf }
-    } else { exit 1, "OPTION ERROR: gtf file not provided or cannot be found" }
-
+            .ifEmpty { exit 1, "OPTION ERROR: gtf file not provided or cannot be found: ${params.gtf}" }
+    }
 
     //
     // START PIPELINE
