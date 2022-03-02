@@ -42,7 +42,6 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 include { PERL_BIOPERL }        from '../modules/local/perl/bioperl/main'
 include { GSTAMA_FILELIST }     from '../modules/local/gstama/filelist/main'
-include { BAMTOOLS_CONVERT }    from '../modules/local/bamtools/convert/main'
 include { GSTAMA_POLYACLEANUP } from '../modules/local/gstama/polyacleanup/main'
 
 
@@ -55,15 +54,19 @@ include { GSTAMA_POLYACLEANUP } from '../modules/local/gstama/polyacleanup/main'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { PBCCS }           from '../modules/nf-core/modules/pbccs/main'
-include { LIMA }            from '../modules/nf-core/modules/lima/main'
-include { ISOSEQ3_REFINE }  from '../modules/nf-core/modules/isoseq3/refine/main'
-include { MINIMAP2_ALIGN }  from '../modules/nf-core/modules/minimap2/align/main'
-include { ULTRA_PIPELINE }  from '../modules/nf-core/modules/ultra/pipeline/main'
-include { SAMTOOLS_SORT }   from '../modules/nf-core/modules/samtools/sort/main'
-include { GSTAMA_COLLAPSE } from '../modules/nf-core/modules/gstama/collapse/main'
-include { GSTAMA_MERGE }    from '../modules/nf-core/modules/gstama/merge/main'
-include { MULTIQC }         from '../modules/nf-core/modules/multiqc/main'
+//include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+//include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+//include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { PBCCS }            from '../modules/nf-core/modules/pbccs/main'
+include { LIMA }             from '../modules/nf-core/modules/lima/main'
+include { ISOSEQ3_REFINE }   from '../modules/nf-core/modules/isoseq3/refine/main'
+include { BAMTOOLS_CONVERT } from '../modules/nf-core/modules/bamtools/convert/main'
+include { MINIMAP2_ALIGN }   from '../modules/nf-core/modules/minimap2/align/main'
+include { ULTRA_PIPELINE }   from '../modules/nf-core/modules/ultra/pipeline/main'
+include { SAMTOOLS_SORT }    from '../modules/nf-core/modules/samtools/sort/main'
+include { GSTAMA_COLLAPSE }  from '../modules/nf-core/modules/gstama/collapse/main'
+include { GSTAMA_MERGE }     from '../modules/nf-core/modules/gstama/merge/main'
+include { MULTIQC }          from '../modules/nf-core/modules/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,8 +134,7 @@ workflow ISOSEQ {
         Channel // --> Prepare gtf value channel for ultra
             .value(file(params.gtf))
             .set { ch_gtf }
-            .ifEmpty { exit 1, "OPTION ERROR: gtf file not provided or cannot be found: ${params.gtf}" }
-    }
+            .ifEmpty { exit 1, "OPTION ERROR: gtf file not provided or cannot be found: ${params.gtf} \nA gtf file must be provided when --ultra is set." }
 
     //
     // START PIPELINE
@@ -144,14 +146,14 @@ workflow ISOSEQ {
         def chk       = (it[1] =~ /.*\.(chunk\d+)\.bam/)[ 0 ][ 1 ]
         def id_former = it[0].id
         def id_new    = it[0].id + "." + chk
-        return [ [id:id_new, id_former:id_former], it[1] ]
+        return [ [id:id_new, id_former:id_former, single_end:true], it[1] ]
     }
     .set { ch_pbccs_bam_updated }
 
     LIMA(ch_pbccs_bam_updated, ch_primers)   // Remove primers from CCS
     ISOSEQ3_REFINE(LIMA.out.bam, ch_primers) // Discard CCS without polyA tails, remove it from the other
     BAMTOOLS_CONVERT(ISOSEQ3_REFINE.out.bam)
-    GSTAMA_POLYACLEANUP(BAMTOOLS_CONVERT.out.out)
+    GSTAMA_POLYACLEANUP(BAMTOOLS_CONVERT.out.data)
 
     // Align CCS (no cluster path) or singletons + transcripts (cluster path)
     // User can choose between minimap2 and uLTRA aligners
@@ -207,6 +209,25 @@ workflow ISOSEQ {
         .flatten()
         .collect()
         .set { ch_versions }
+//  //
+//  // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+//  //
+//  INPUT_CHECK (
+//      ch_input
+//  )
+//  ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+//
+//  //
+//  // MODULE: Run FastQC
+//  //
+//  FASTQC (
+//      INPUT_CHECK.out.reads
+//  )
+//  ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+//
+//  CUSTOM_DUMPSOFTWAREVERSIONS (
+//      ch_versions.unique().collectFile(name: 'collated_versions.yml')
+//  )
 
     //
     // MODULE: MultiQC
@@ -218,9 +239,11 @@ workflow ISOSEQ {
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-//     ch_multiqc_files = ch_multiqc_files.mix(PBCCS.out.report_json.collect{it[1]}.ifEmpty([]))
+//  ch_multiqc_files = ch_multiqc_files.mix(PBCCS.out.report_json.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(LIMA.out.summary.collect{it[1]}.ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(LIMA.out.counts.collect{it[1]}.ifEmpty([]))
+//  ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+//  ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect()

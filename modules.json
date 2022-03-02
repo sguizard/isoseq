@@ -3,32 +3,41 @@
     "homePage": "https://github.com/nf-core/isoseq",
     "repos": {
         "nf-core/modules": {
-            "gstama/collapse": {
+            "bamtools/convert": {
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
+            },
+            "custom/dumpsoftwareversions": {
+                "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
+            },
+            "fastqc": {
                 "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+            },
+            "gstama/collapse": {
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "gstama/merge": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "isoseq3/refine": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "lima": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "minimap2/align": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "multiqc": {
                 "git_sha": "20d8250d9f39ddb05dfb437603aaf99b5c0b2b41"
             },
             "pbccs": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "samtools/sort": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             },
             "ultra/pipeline": {
-                "git_sha": "9d0cad583b9a71a6509b754fdf589cbfbed08961"
+                "git_sha": "e20e57f90b6787ac9a010a980cf6ea98bd990046"
             }
         }
     }
