@@ -148,7 +148,7 @@ workflow ISOSEQ {
         def chk       = (it[1] =~ /.*\.(chunk\d+)\.bam/)[ 0 ][ 1 ]
         def id_former = it[0].id
         def id_new    = it[0].id + "." + chk
-        return [ [id:id_new, id_former:id_former], it[1] ]
+        return [ [id:id_new, id_former:id_former, single_end:true], it[1] ]
     }
     .set { ch_pbccs_bam_updated }
 
